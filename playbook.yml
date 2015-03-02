@@ -1,0 +1,49 @@
+---
+- hosts: dev 
+  tasks:
+  
+  - name: install common system dependencies
+    sudo: yes
+    apt: pkg={{item}} state=latest
+    with_items:
+      - python2.7
+      - python-software-properties
+      - python-pip
+      - python-virtualenv
+      - build-essential
+      - python-dev
+      - htop
+      - git
+      - ruby-full
+      - rubygems
+      - vim
+      - make
+
+  - name: Install library mysql client dev
+    sudo: yes
+    ignore_errors: yes    
+    apt: name=libmysqlclient-dev state=latest
+    notify: 
+      Installed libmysqlclient-dev
+
+  - name: add NodeJs repository
+    sudo: yes
+    apt_repository: repo='ppa:chris-lea/node.js' state=present
+
+  - name: update apt cache
+    apt: update_cache=yes
+
+  - name: install NodeJS and Npm
+    sudo: yes
+    apt: name=nodejs state=latest
+
+  - name: install Ruby
+    sudo: yes
+    apt: name=ruby-dev state=latest
+
+  - name: install Ruby gem - Compass
+    sudo: yes
+    command: gem install compass
+
+  - name: install Ruby gem - JSON
+    command: gem install json
